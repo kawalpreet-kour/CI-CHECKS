@@ -15,19 +15,21 @@
 ---
 
 <details>
-  <summary><h2><strong>Table of Contents</strong></h2></summary>
+  <summary><strong>Table of Contents</strong></summary>
 
-1. [Introduction](#introduction)  
-2. [What is ScyllaDB?](#what-is-scylladb)  
-3. [Why Use Ansible for ScyllaDB Deployment?](#why-use-ansible-for-scylladb-deployment)  
-4. [Role Components](#role-components)  
-5. [Variables and Templates](#variables-and-templates)  
-6. [Pre-requisites](#pre-requisites)  
-7. [Advantages](#advantages)  
-8. [Best Practices](#best-practices)  
-9. [FAQs](#faqs)  
-10. [Contact Information](#contact-information)  
-11. [References](#references)
+- [Introduction](#introduction)  
+- [Pre-requisites](#pre-requisites) 
+- [What is ScyllaDB?](#what-is-scylladb)  
+- [Why Use Ansible for ScyllaDB Deployment?](#why-use-ansible-for-scylladb-deployment)  
+- [Workflow Diagram](#workflow-diagram)  
+- [Ansible Role Directory Structure](#ansible-role-directory-structure)  
+- [Role Components](#role-components)  
+- [Variables and Templates](#variables-and-templates)  
+- [Advantages](#advantages)  
+- [Best Practices](#best-practices)  
+- [FAQs](#faqs)  
+- [Contact Information](#contact-information)  
+- [References](#references)
 
 </details>
 
@@ -143,11 +145,13 @@ scylladb/
 
 This file will dynamically render the following values into the `scylla.yaml` config:
 
-- `cluster_name`
-- `seeds`
-- `listen_address`
-- `rpc_address`
-- `endpoint_snitch`
+| Parameter           | Description                                |
+|---------------------|--------------------------------------------|
+| **`cluster_name`**      | Name of the ScyllaDB cluster               |
+| **`seeds`**             | List of IPs for seed nodes                 |
+| **`listen_address`**    | Address on which ScyllaDB listens          |
+| **`rpc_address`**       | Address for client communication (RPC)     |
+| **`endpoint_snitch`**   | Determines how ScyllaDB locates nodes      |
 
 ---
 
