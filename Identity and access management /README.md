@@ -36,12 +36,12 @@
 
 | Item              | Description                                                  |
 |------------------|--------------------------------------------------------------|
-| OS Compatibility | CentOS 7/8, RHEL 7/8, Ubuntu 20.04+                          |
-| Python           | Python 3.x (required by Ansible)                            |
-| Ansible Version  | >= 2.9                                                       |
-| Inventory File   | Must list all nodes with correct IPs or hostnames           |
-| SSH Access       | Password-less SSH to target nodes (using keys)              |
-| Ports            | Open ports like 9042, 7000, 7001, 7199, etc.                |
+| **OS Compatibility** | CentOS 7/8, RHEL 7/8, Ubuntu 20.04+                          |
+| **Python**           | Python 3.x (required by Ansible)                            |
+| **Ansible Version**  | >= 2.9                                                       |
+| **Inventory File**   | Must list all nodes with correct IPs or hostnames           |
+| **SSH Access**       | Password-less SSH to target nodes (using keys)              |
+| **Ports**            | Open ports like 9042, 7000, 7001, 7199, etc.                |
 
 ---
 
@@ -61,11 +61,11 @@ This document outlines the design of an Ansible role for deploying and managing 
 
 | Reason                   | Explanation                                                                 |
 |--------------------------|-----------------------------------------------------------------------------|
-| Automation               | Eliminates manual steps across multiple servers.                           |
-| Consistency              | Ensures uniform configuration across environments.                         |
-| Scalability              | Easily scale cluster nodes with inventory updates.                         |
-| Idempotency              | Ansible ensures operations are repeatable without adverse effects.         |
-| CI/CD Integration        | Can be integrated into pipelines (e.g., Jenkins) for automated delivery.   |
+| **Automation**               | Eliminates manual steps across multiple servers.                           |
+| **Consistency**              | Ensures uniform configuration across environments.                         |
+| **Scalability**              | Easily scale cluster nodes with inventory updates.                         |
+| **Idempotency**              | Ansible ensures operations are repeatable without adverse effects.         |
+| **CI/CD Integration**        | Can be integrated into pipelines (e.g., Jenkins) for automated delivery.   |
 
 ---
 
@@ -73,21 +73,20 @@ This document outlines the design of an Ansible role for deploying and managing 
 
 ```mermaid
 flowchart LR
-    A[Read Inventory\n& Variables] --> B[Install Dependencies\n(Python, curl)]
+    A[Read Inventory and Variables] --> B[Install Python and curl]
     B --> C[Add ScyllaDB Repository]
     C --> D[Install ScyllaDB Package]
     D --> E[Run scylla_setup]
-    E --> F[Configure scylla.yaml\nUsing Template]
-    F --> G[Start & Enable\nscylla-server Service]
+    E --> F[Configure scylla.yaml using template]
+    F --> G[Start and Enable scylla-server]
     G --> H{Multi-node Setup?}
     H -- Yes --> I[Join Cluster]
     H -- No --> J[Skip Clustering]
-    I --> K[Verify Service Status\n& Cluster Health]
+    I --> K[Verify Service and Cluster Health]
     J --> K
     K --> L[End]
-
-
 ```
+
 ---
 
 ## Ansible Role Directory Structure
@@ -121,12 +120,12 @@ scylladb/
 
 | Component     | Description                                                               |
 |---------------|---------------------------------------------------------------------------|
-| `defaults/`   | Contains default values for role variables                                |
-| `tasks/`      | Includes all operational steps like install, configure, cluster setup     |
-| `templates/`  | Contains Jinja2 templates used for config files like `scylla.yaml`         |
-| `handlers/`   | Defines service restart or reload triggers                                |
-| `files/`      | Used for static files like custom repo files or certificates              |
-| `vars/`       | Contains environment or site-specific variable overrides                  |
+| **`defaults/`**   | Contains default values for role variables                                |
+| **`tasks/`**      | Includes all operational steps like install, configure, cluster setup     |
+| **`templates/`**  | Contains Jinja2 templates used for config files like `scylla.yaml`         |
+| **`handlers/`**   | Defines service restart or reload triggers                                |
+| **`files/`**      | Used for static files like custom repo files or certificates              |
+| **`vars/`**       | Contains environment or site-specific variable overrides                  |
 
 ---
 
@@ -134,11 +133,11 @@ scylladb/
 
 | Variable Name           | Description                          | Default Value                    |
 |-------------------------|--------------------------------------|----------------------------------|
-| `scylla_version`        | Version to install                   | `stable`                         |
-| `scylla_cluster_name`   | Name of the ScyllaDB cluster         | `scylla-cluster`                 |
-| `scylla_seeds`          | Seed nodes for clustering            | `["10.0.0.1", "10.0.0.2"]`       |
-| `scylla_listen_address` | Node listen IP                       | `{{ ansible_host }}`             |
-| `scylla_rpc_address`    | RPC IP address                       | `{{ ansible_host }}`             |
+| **`scylla_version`**        | Version to install                   | `stable`                         |
+| **`scylla_cluster_name`**   | Name of the ScyllaDB cluster         | `scylla-cluster`                 |
+| **`scylla_seeds`**          | Seed nodes for clustering            | `["10.0.0.1", "10.0.0.2"]`       |
+| **`scylla_listen_address`** | Node listen IP                       | `{{ ansible_host }}`             |
+| **`scylla_rpc_address`**    | RPC IP address                       | `{{ ansible_host }}`             |
 
 ### Template: `scylla.yaml.j2`
 
@@ -156,11 +155,11 @@ This file will dynamically render the following values into the `scylla.yaml` co
 
 | Benefit             | Explanation                                                        |
 |---------------------|--------------------------------------------------------------------|
-| Faster Deployment   | Automate setup across all environments in minutes                 |
-| Reusability         | Role can be reused across different clusters or use-cases         |
-| Consistency         | Avoid configuration drift                                         |
-| Cluster Flexibility | Easily scale nodes and configure clustering                       |
-| CI/CD Ready         | Role can be plugged into Jenkins or other automation pipelines     |
+| **Faster Deployment**   | Automate setup across all environments in minutes                 |
+| **Reusability**         | Role can be reused across different clusters or use-cases         |
+| **Consistency**         | Avoid configuration drift                                         |
+| **Cluster Flexibility** | Easily scale nodes and configure clustering                       |
+| **CI/CD Ready**         | Role can be plugged into Jenkins or other automation pipelines     |
 
 ---
 
@@ -168,11 +167,11 @@ This file will dynamically render the following values into the `scylla.yaml` co
 
 | Practice              | Description                                                   |
 |-----------------------|---------------------------------------------------------------|
-| Use Vault for Secrets | Store credentials or keys using Ansible Vault                 |
-| Tag Tasks             | Use tags like `install`, `configure`, `cluster` for control   |
-| Run in Check Mode     | Validate changes before applying                              |
-| Test in Dev First     | Always test role in non-prod before rolling out               |
-| Enable Logging        | Collect logs to troubleshoot deployment issues                |
+| **Use Vault for Secrets** | Store credentials or keys using Ansible Vault                 |
+| **Tag Tasks**             | Use tags like `install`, `configure`, `cluster` for control   |
+| **Run in Check Mode**     | Validate changes before applying                              |
+| **Test in Dev First**     | Always test role in non-prod before rolling out               |
+| **Enable Logging**        | Collect logs to troubleshoot deployment issues                |
 
 ---
 
@@ -193,7 +192,7 @@ This file will dynamically render the following values into the `scylla.yaml` co
 
 | Name            | Email                                      |
 |------------------|--------------------------------------------|
-| Kawalpreet Kour | kawalpreet.kour.snaatak@mygurukulam.co     |
+| **Kawalpreet Kour** | kawalpreet.kour.snaatak@mygurukulam.co     |
 
 ---
 
